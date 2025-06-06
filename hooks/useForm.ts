@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { formService } from '../services/formService';
+import { formService } from '../services';
 
 export const useFormSchemas = () => {
     return useQuery({

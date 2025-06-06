@@ -1,5 +1,5 @@
 const formRepository = {
-    getFormSchemas: async () => {
+    fetchFormSchemas: async () => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/insurance/forms`);
         if (!response.ok) {
             throw new Error('Failed to get form schemas');
@@ -17,7 +17,7 @@ const formRepository = {
         }
         return response.json();
     },
-    getSubmittedApplications: async () => {
+    fetchSubmittedApplications: async () => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/insurance/forms/submissions`);
         if (!response.ok) {
             throw new Error('Failed to get submitted applications');

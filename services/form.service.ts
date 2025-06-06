@@ -1,4 +1,4 @@
-import {formRepository} from '../repositories/formRepository';
+import formRepository from '../repositories/form.repository';
 
 const formService = {
     getFormSchemas: () => {
