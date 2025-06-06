@@ -12,11 +12,6 @@ export interface VisibilityCondition {
     condition: 'equals' | 'not_equals';
     value: any;
 }
-// export interface ConditionGroup {
-//     logic: 'AND' | 'OR';
-//     conditions: (SingleCondition | ConditionGroup)[];
-// }
-// export type VisibilityCondition = SingleCondition | ConditionGroup;
 
 export interface DynamicOptionsConfig {
     dependsOn: string;

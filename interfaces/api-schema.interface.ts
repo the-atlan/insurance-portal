@@ -1,7 +1,7 @@
 export interface ApiField {
     id: string;
     label: string;
-    type: string;
+    type: 'text' | 'number' | 'date' | 'select' | 'radio' | 'checkbox' | 'group';
     required?: boolean;
     options?: string[];
     fields?: ApiField[];

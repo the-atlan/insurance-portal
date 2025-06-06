@@ -1,15 +1,15 @@
-import {DynamicOptionsConfig, Field, LabelValueOptions, VisibilityCondition} from "@/interfaces/field.interface";
+import {Field, VisibilityCondition} from "@/interfaces/field.interface";
 import {Form, Input, InputNumber, DatePicker, Select, Radio, Checkbox, Card} from "antd";
 import {FormInstance} from "antd/es/form";
-import {useEffect, useState} from "react";
 import {useDynamicOptions} from "@/hooks/useForm";
+import {useEffect, useRef} from "react";
 
 interface FormFieldProps {
     form: FormInstance;
     field: Field;
 }
 
-function isFieldVisible(condition: VisibilityCondition, formValues: any): boolean {
+function isFieldVisible(condition: VisibilityCondition, formValues: Record<string, string | number | boolean>): boolean {
     const dependentValue = formValues?.[condition.dependsOn];
     if (dependentValue === undefined) {
         return false;
@@ -26,17 +26,43 @@ function isFieldVisible(condition: VisibilityCondition, formValues: any): boolea
 }
 
 const FormField = ({form, field}: FormFieldProps) => {
+    const isMounted = useRef(false);
 
     const allValues = Form.useWatch([], form);
 
     const dependencyValue = Form.useWatch(field.type === 'select' ? field.dynamicOptions?.dependsOn : null, form);
+
+    const isVisible = field.visibility ? isFieldVisible(field.visibility, allValues) : true;
 
     const { data: dynamicOptions, isLoading: isLoadingOptions } = useDynamicOptions(
         field.type === 'select' ? field.dynamicOptions : undefined,
         dependencyValue
     );
 
-    const isVisible = field.visibility ? isFieldVisible(field.visibility, allValues) : true;
+    useEffect(() => {
+        if (isMounted.current) {
+            if (field.type === 'select' && field.dynamicOptions) {
+                form.setFieldsValue({ [field.id]: undefined });
+            }
+        }
+    }, [dependencyValue]);
+
+    useEffect(() => {
+        if (isMounted.current) {
+            if (field.visibility && !isVisible) {
+                form.setFieldsValue({ [field.id]: undefined });
+            }
+        }
+    }, [isVisible, field.id, field.visibility, form]);
+
+    useEffect(() => {
+        isMounted.current = true;
+
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
+
 
     if (!isVisible) {
         return null;

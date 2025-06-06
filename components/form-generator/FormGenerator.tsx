@@ -1,6 +1,6 @@
 import {Button, Col, Flex, Form, Row, Typography} from "antd";
 import styles from "./FormGenerator.module.css"
-import {DynamicOptionsConfig, FormSchema, LabelValueOptions} from "@/interfaces/field.interface";
+import {FormSchema} from "@/interfaces/field.interface";
 import FormField from "@/components/form-field/FormField";
 import {FormInstance} from "antd/es/form";
 import {useEffect} from "react";
