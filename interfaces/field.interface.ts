@@ -7,6 +7,23 @@ export interface LabelValueOptions {
     value: string | number | boolean;
 }
 
+export interface VisibilityCondition {
+    dependsOn: string;
+    condition: 'equals' | 'not_equals';
+    value: any;
+}
+// export interface ConditionGroup {
+//     logic: 'AND' | 'OR';
+//     conditions: (SingleCondition | ConditionGroup)[];
+// }
+// export type VisibilityCondition = SingleCondition | ConditionGroup;
+
+export interface DynamicOptionsConfig {
+    dependsOn: string;
+    method: string;
+    endpoint: string;
+}
+
 export interface ColumnDefinition { span: number; field: Field; }
 export interface RowDefinition { id: string; columns: ColumnDefinition[]; }
 export interface LayoutDefinition { type: 'grid'; rows: RowDefinition[]; }
@@ -16,7 +33,7 @@ interface BaseField {
     id: string;
     label: string;
     style?: CSSProperties;
-    hidden?: boolean;
+    visibility?: VisibilityCondition;
 }
 
 interface TextField extends BaseField {
@@ -34,7 +51,6 @@ interface NumberField extends BaseField {
 interface DateField extends BaseField {
     type: 'date';
     placeholder?: string;
-    // IMPROVEMENT: Added validation for consistency
     validation?: Rule[];
 }
 
@@ -42,6 +58,7 @@ interface SelectField extends BaseField {
     type: 'select';
     placeholder?: string;
     options: LabelValueOptions[];
+    dynamicOptions?: DynamicOptionsConfig;
     validation?: Rule[];
 }
 
