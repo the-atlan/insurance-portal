@@ -1,5 +1,6 @@
 'use client';
 
+import styles from "./page.module.css"
 import React, {useState, useEffect, useMemo, useCallback} from 'react';
 import {Table, Card, Input, Button, Dropdown, Checkbox, Space, Typography, Flex, Grid} from 'antd';
 import Link from 'next/link';
@@ -84,7 +85,7 @@ const SubmissionsPage = () => {
     );
 
     return (
-        <div style={{ padding: 24, backgroundColor: '#f0f2f5', minHeight: '100vh' }}>
+        <div className={styles.container}>
             <Card>
                 <Title level={2}>Submitted Applications</Title>
                 <Flex justify="space-between" align="center" style={{ marginBottom: 16 }} vertical={!screens.md} gap={!screens.md ? 16 : 0}>

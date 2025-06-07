@@ -72,7 +72,7 @@ const FormField = ({form, field}: FormFieldProps) => {
         return (
             <Card
                 title={field.label}
-                style={{marginTop: 16, backgroundColor: '#fafafa'}}
+                style={{marginTop: 16}}
             >
                 {field.fields.map((subField) => (
                     <FormField

@@ -1,14 +1,17 @@
 "use client";
 
-import {Drawer, Flex, Grid, Menu, Button} from "antd";
+import {Drawer, Flex, Grid, Menu, Button, Switch} from "antd";
 import styles from "./AppHeader.module.css";
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import Link from "next/link";
-import {HomeFilled, IdcardFilled, SafetyCertificateFilled, MenuOutlined} from "@ant-design/icons";
+import {HomeFilled, IdcardFilled, SafetyCertificateFilled, MenuOutlined, SunFilled, MoonFilled} from "@ant-design/icons";
+import {ThemeContext} from "@/contexts/Theme.context";
 
 const { useBreakpoint } = Grid;
 
 const AppHeader = () => {
+    const theme = useContext(ThemeContext);
+
     const [drawerVisible, setDrawerVisible] = useState(false);
 
     const screens = useBreakpoint();
@@ -66,7 +69,10 @@ const AppHeader = () => {
                 />
             )}
 
-            <span>LOGO</span>
+            <Flex align="center" gap={16}>
+                <Switch checked={theme.theme === "dark"} onChange={theme.toggleTheme} unCheckedChildren={<SunFilled />} checkedChildren={<MoonFilled />}  />
+                <span style={{ color: theme.theme === "dark" ? "#fff" : "#000" }}>LOGO</span>
+            </Flex>
 
             <Drawer
                 title="Menu"
