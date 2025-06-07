@@ -33,7 +33,11 @@ const FormGenerator = ({ schema, onFinish, initialValues, form } : FormGenerator
             ))}
             <Flex gap="small" justify={schema.actions.alignment} >
                 {schema.actions.buttons.map((button, index) => (
-                    <Button key={`form-action-button-${index}`} {...button}/>
+                    <Button
+                        key={`form-action-button-${index}`}
+                        {...button}
+                        onClick={button.htmlType === 'reset' ? () => form.resetFields() : undefined}
+                    />
                 ))}
             </Flex>
         </Form>

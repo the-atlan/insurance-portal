@@ -9,7 +9,7 @@ interface FormFieldProps {
     field: Field;
 }
 
-function isFieldVisible(condition: VisibilityCondition, formValues: Record<string, string | number | boolean>): boolean {
+export function isFieldVisible(condition: VisibilityCondition, formValues: Record<string, string | number | boolean>): boolean {
     const dependentValue = formValues?.[condition.dependsOn];
     if (dependentValue === undefined) {
         return false;
