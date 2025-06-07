@@ -12,15 +12,16 @@ interface FormGeneratorProps {
     form: FormInstance;
     initialValues: Record<string, string | number | boolean>;
     onFinish: (values: Record<string, string | number | boolean>) => void;
+    onReset?: () => void;
 }
 
-const FormGenerator = ({ schema, onFinish, initialValues, form } : FormGeneratorProps) => {
+const FormGenerator = ({ schema, onFinish, initialValues, form, onReset } : FormGeneratorProps) => {
     useEffect(() => {
         form.setFieldsValue(initialValues);
     }, [initialValues, form]);
 
     return (
-        <Form form={form} className={styles.form} onFinish={onFinish} initialValues={initialValues}>
+        <Form form={form} className={styles.form} onFinish={onFinish} initialValues={initialValues} onReset={onReset}>
             <Title level={2}>{schema.title}</Title>
             {schema.layout.rows.map((row) => (
                 <Row key={row.id} gutter={16}>
