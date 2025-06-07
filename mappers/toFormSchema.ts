@@ -1,8 +1,9 @@
 import {ApiField, ApiSchema} from "@/interfaces/api-schema.interface";
 import {ActionDefinition, Field, FormSchema, LabelValueOptions, LayoutDefinition} from "@/interfaces/field.interface";
 import {Rule} from "antd/es/form";
+import {TFunction} from "i18next";
 
-const toFormSchema = (apiSchema: ApiSchema): FormSchema => {
+const toFormSchema = (apiSchema: ApiSchema, t: TFunction<"common", undefined>): FormSchema => {
     const transformField = (apiField: ApiField): Field => {
         const validation: Rule[] = [];
         if (apiField.required) {
@@ -91,12 +92,12 @@ const toFormSchema = (apiSchema: ApiSchema): FormSchema => {
         buttons: [
             {
                 htmlType: 'reset',
-                children: 'Clear',
+                children: t('apply.clear'),
             },
             {
                 htmlType: 'submit',
                 type: 'primary',
-                children: 'Submit',
+                children: t('apply.submit'),
                 style: { marginLeft: '8px' },
             },
         ],

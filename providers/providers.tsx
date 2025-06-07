@@ -6,6 +6,8 @@ import {queryClient} from "@/lib";
 import React, {useState} from "react";
 import {ThemeContext} from "@/contexts/Theme.context";
 import {ConfigProvider, theme} from "antd";
+import { I18nextProvider } from "react-i18next";
+import { i18n } from "@/lib";
 
 interface ProvidersProps {
     children: React.ReactNode;
@@ -26,7 +28,9 @@ export default function Providers({children}: ProvidersProps) {
                         algorithm: currentTheme === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm,
                     }}
                 >
-                    {children}
+                    <I18nextProvider i18n={i18n}>
+                        {children}
+                    </I18nextProvider>
                     <ReactQueryDevtools initialIsOpen={false}/>
                 </ConfigProvider>
             </ThemeContext.Provider>

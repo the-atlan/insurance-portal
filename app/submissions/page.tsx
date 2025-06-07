@@ -5,6 +5,7 @@ import React, {useState, useEffect, useMemo, useCallback} from 'react';
 import {Table, Card, Input, Button, Dropdown, Checkbox, Space, Typography, Flex, Grid} from 'antd';
 import Link from 'next/link';
 import {useSubmissions} from "@/hooks/useForm";
+import {useTranslation} from "react-i18next";
 
 const { Title } = Typography;
 const { Search } = Input;
@@ -19,6 +20,8 @@ interface Column {
 const { useBreakpoint } = Grid;
 
 const SubmissionsPage = () => {
+    const { t  } = useTranslation('common');
+
     const [allColumns, setAllColumns] = useState<Column[]>([]);
     const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
     const [searchText, setSearchText] = useState('');
@@ -85,22 +88,22 @@ const SubmissionsPage = () => {
     );
 
     return (
-        <div className={styles.container}>
+        <div className={styles.container} dir={t('dir')}>
             <Card>
-                <Title level={2}>Submitted Applications</Title>
+                <Title level={2}>{t('submissions.title')}</Title>
                 <Flex justify="space-between" align="center" style={{ marginBottom: 16 }} vertical={!screens.md} gap={!screens.md ? 16 : 0}>
                     <Search
-                        placeholder="Search submissions..."
+                        placeholder={t('submissions.search_placeholder')}
                         onChange={(e) => setSearchText(e.target.value)}
                         onSearch={setSearchText}
                         style={{ width: 300 }}
                     />
                     <Space>
                         <Dropdown popupRender={() => columnSelectorMenu} trigger={['click']}>
-                            <Button>Select Columns</Button>
+                            <Button>{t('submissions.select_columns')}</Button>
                         </Dropdown>
                         <Link href="/apply">
-                            <Button type="primary">Add New Application</Button>
+                            <Button type="primary">{t('submissions.add_new_application')}</Button>
                         </Link>
                     </Space>
                 </Flex>

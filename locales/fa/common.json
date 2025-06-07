@@ -1,0 +1,25 @@
+{
+  "header": {
+    "home": "خانه",
+    "new_application": "درخواست جدید",
+    "submissions": "درخواست‌ها"
+  },
+  "home": {
+    "title": "پرتابل بیمه دیوتل",
+    "description": "برای شروع، یک درخواست جدید ثبت کنید یا لیست درخواست\u200Cهای قبلی خود را مشاهده نمایید.",
+    "new_application": "ثبت درخواست جدید",
+    "submissions": "مشاهده درخواست ها"
+  },
+  "apply": {
+    "submit": "ثبت",
+    "clear": "بازنشانی"
+  },
+  "submissions": {
+    "title": "درخواست های ثبت شده",
+    "search_placeholder": "جتسجو درخواست ها...",
+    "select_columns": "انتخاب ستون ها",
+    "add_new_application": "افزودن درخواست جدید"
+  },
+  "dir": "rtl",
+  "logo": "لوگو"
+}

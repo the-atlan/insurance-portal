@@ -8,6 +8,7 @@ import {FormSchema} from "@/interfaces/field.interface";
 import {useFormSchemas, useSubmitApplication} from "@/hooks/useForm";
 import {useRouter} from "next/navigation";
 import {toFormSchema} from "@/mappers";
+import {useTranslation} from "react-i18next";
 
 const ApplyPage = () => {
     const router = useRouter();
@@ -16,6 +17,7 @@ const ApplyPage = () => {
     const [selectedForm, setSelectedForm] = useState<string>();
     const [initialValues, setInitialValues] = useState<Record<string, string | number | boolean>>({});
 
+    const { t, i18n  } = useTranslation('common');
     const formValues = Form.useWatch([], form);
 
     const [messageApi, contextHolder] = message.useMessage();
@@ -50,6 +52,10 @@ const ApplyPage = () => {
         return () => clearTimeout(debounceSave);
     }, [formValues, selectedForm]);
 
+    useEffect(() => {
+        if (selectedForm) changeSelectedSchema(selectedForm);
+    }, [i18n.language])
+
     const clearDraft = () => localStorage.removeItem(`formDraft_${selectedForm}`);
 
     const onFinish = async (values: Record<string, string | number | boolean>) => {
@@ -80,11 +86,11 @@ const ApplyPage = () => {
         setSelectedForm(value);
         const selectedSchema = formSchemas?.find(formSchema => formSchema.formId === value);
 
-        setSchema(toFormSchema(selectedSchema!));
+        setSchema(toFormSchema(selectedSchema!, t));
     }
 
     return (
-        <div className={styles.container}>
+        <div dir={t('dir')} className={styles.container}>
             {contextHolder}
             {isLoading ? <p>Loading...</p> : <Select style={{ width: '50%' }} options={getAvailableSchemas()} onChange={changeSelectedSchema} />}
             {schema && selectedForm && <FormGenerator schema={schema} onFinish={onFinish} form={form} initialValues={initialValues} onReset={onReset}/>}

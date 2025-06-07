@@ -1,15 +1,29 @@
 "use client";
 
-import {Drawer, Flex, Grid, Menu, Button, Switch} from "antd";
+import {Drawer, Flex, Grid, Menu, Button, Switch, Select} from "antd";
 import styles from "./AppHeader.module.css";
 import React, {useContext, useState} from "react";
 import Link from "next/link";
 import {HomeFilled, IdcardFilled, SafetyCertificateFilled, MenuOutlined, SunFilled, MoonFilled} from "@ant-design/icons";
 import {ThemeContext} from "@/contexts/Theme.context";
+import {useTranslation} from "react-i18next";
 
 const { useBreakpoint } = Grid;
 
 const AppHeader = () => {
+    const supportedLanguages = [
+        {
+            label: "English",
+            value: "en"
+        },
+        {
+            label: "فارسی",
+            value: "fa"
+        }
+    ]
+
+    const { t, i18n } = useTranslation('common');
+
     const theme = useContext(ThemeContext);
 
     const [drawerVisible, setDrawerVisible] = useState(false);
@@ -29,7 +43,7 @@ const AppHeader = () => {
             key: 1,
             label: (
                 <Link href='/'>
-                    Home
+                    {t('header.home')}
                 </Link>
             ),
             icon: <HomeFilled />
@@ -38,7 +52,7 @@ const AppHeader = () => {
             key: 2,
             label: (
                 <Link href='/apply'>
-                    New Application
+                    {t('header.new_application')}
                 </Link>
             ),
             icon: <SafetyCertificateFilled />
@@ -47,14 +61,19 @@ const AppHeader = () => {
             key: 3,
             label: (
                 <Link href='/submissions'>
-                    Submissions
+                    {t('header.submissions')}
                 </Link>
             ),
             icon: <IdcardFilled />
         },
     ]
+
+    const changeLanguage = (newLang: string) => {
+        i18n.changeLanguage(newLang)
+    }
+
     return (
-        <Flex className={styles.header} component="header" justify="space-between" align="center">
+        <Flex dir={t('dir')} className={styles.header} component="header" justify="space-between" align="center">
             {screens.md ? (
                 <Menu
                     className={styles.navbar}
@@ -70,8 +89,9 @@ const AppHeader = () => {
             )}
 
             <Flex align="center" gap={16}>
+                <Select defaultValue={"en"} options={supportedLanguages} onChange={changeLanguage}/>
                 <Switch checked={theme.theme === "dark"} onChange={theme.toggleTheme} unCheckedChildren={<SunFilled />} checkedChildren={<MoonFilled />}  />
-                <span style={{ color: theme.theme === "dark" ? "#fff" : "#000" }}>LOGO</span>
+                <span style={{ color: theme.theme === "dark" ? "#fff" : "#000" }}>{t('logo')}</span>
             </Flex>
 
             <Drawer

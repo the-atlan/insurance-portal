@@ -1,0 +1,25 @@
+{
+  "header": {
+    "home": "Home",
+    "new_application": "New Application",
+    "submissions": "Submissions"
+  },
+  "home": {
+    "title": "Devotel Insurance Portal",
+    "description": "To get started, submit a new request or view a list of your previous requests.",
+    "new_application": "Add New Application",
+    "submissions": "See Submissions"
+  },
+  "apply": {
+    "submit": "Submit",
+    "clear": "Clear"
+  },
+  "submissions": {
+    "title": "Submitted Applications",
+    "search_placeholder": "Search Submissions...",
+    "select_columns": "Search Columns",
+    "add_new_application": "Add New Application"
+  },
+  "dir": "ltr",
+  "logo": "LOGO"
+}
