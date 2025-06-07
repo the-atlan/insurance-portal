@@ -46,7 +46,6 @@ const ApplyPage = () => {
         if (!selectedForm) return;
 
         const debounceSave = setTimeout(() => {
-            console.log("logggggggggg")
             if (formValues && Object.keys(formValues).length > 0) {
                 localStorage.setItem(`formDraft_${selectedForm}`, JSON.stringify(formValues));
             }
