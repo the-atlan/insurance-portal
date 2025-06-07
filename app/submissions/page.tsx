@@ -1,17 +1,28 @@
 'use client';
 
 import React, {useState, useEffect, useMemo, useCallback} from 'react';
-import { Table, Card, Input, Button, Dropdown, Checkbox, Space, Typography, Flex } from 'antd';
+import {Table, Card, Input, Button, Dropdown, Checkbox, Space, Typography, Flex, Grid} from 'antd';
 import Link from 'next/link';
 import {useSubmissions} from "@/hooks/useForm";
 
 const { Title } = Typography;
 const { Search } = Input;
 
+interface Column {
+    title: string,
+    dataIndex: string,
+    key: string,
+    sorter: (a: Record<string, string | number>, b: Record<string, string | number>) => number
+}
+
+const { useBreakpoint } = Grid;
+
 const SubmissionsPage = () => {
-    const [allColumns, setAllColumns] = useState<{ label: string, key: string }[]>([]);
+    const [allColumns, setAllColumns] = useState<Column[]>([]);
     const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
     const [searchText, setSearchText] = useState('');
+
+    const screens = useBreakpoint();
 
     const { data: submissions, isLoading: isSubmissionsLoading } = useSubmissions();
 
@@ -22,9 +33,14 @@ const SubmissionsPage = () => {
             title: colName,
             dataIndex: colName,
             key: colName,
-            sorter: (a: any, b: any) => {
-                if (typeof a[colName] === 'number') return a[colName] - b[colName];
-                return String(a[colName]).localeCompare(String(b[colName]));
+            sorter: (a: Record<string, string | number>, b: Record<string, string | number>) => {
+                const valA = a[colName];
+                const valB = b[colName];
+
+                if (typeof valA === 'number' && typeof valB === 'number') {
+                    return valA - valB;
+                }
+                return String(valA).localeCompare(String(valB));
             },
         }));
 
@@ -71,7 +87,7 @@ const SubmissionsPage = () => {
         <div style={{ padding: 24, backgroundColor: '#f0f2f5', minHeight: '100vh' }}>
             <Card>
                 <Title level={2}>Submitted Applications</Title>
-                <Flex justify="space-between" align="center" style={{ marginBottom: 16 }}>
+                <Flex justify="space-between" align="center" style={{ marginBottom: 16 }} vertical={!screens.md} gap={!screens.md ? 16 : 0}>
                     <Search
                         placeholder="Search submissions..."
                         onChange={(e) => setSearchText(e.target.value)}
@@ -79,7 +95,7 @@ const SubmissionsPage = () => {
                         style={{ width: 300 }}
                     />
                     <Space>
-                        <Dropdown overlay={columnSelectorMenu} trigger={['click']}>
+                        <Dropdown popupRender={() => columnSelectorMenu} trigger={['click']}>
                             <Button>Select Columns</Button>
                         </Dropdown>
                         <Link href="/apply">
@@ -94,6 +110,7 @@ const SubmissionsPage = () => {
                     columns={activeColumns}
                     rowKey="id"
                     pagination={{ pageSize: 5 }}
+                    scroll={{ x: 'max-content' }}
                 />
             </Card>
         </div>

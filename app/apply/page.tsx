@@ -4,79 +4,10 @@ import React, {useState} from 'react';
 import {Form, Select} from 'antd';
 import styles from './page.module.css';
 import FormGenerator from "@/components/form-generator/FormGenerator";
-import {
-    ActionDefinition,
-    Field,
-    FormSchema,
-    LabelValueOptions,
-    LayoutDefinition
-} from "@/interfaces/field.interface";
+import {FormSchema} from "@/interfaces/field.interface";
 import {useFormSchemas, useSubmitApplication} from "@/hooks/useForm";
-import {Rule} from "antd/es/form";
-import {ApiField, ApiSchema} from "@/interfaces/api-schema.interface";
 import {useRouter} from "next/navigation";
-
-export const transformApiToFormSchema = (apiSchema: ApiSchema): FormSchema => {
-    const transformField = (apiField: ApiField): Field => {
-        const validation: Rule[] = [];
-        if (apiField.required) {
-            validation.push({ required: true, message: `${apiField.label} is required.` });
-        }
-
-        const options: LabelValueOptions[] | undefined = apiField.options?.map(opt => ({
-            label: opt,
-            value: opt,
-        }));
-
-        const transformedField: Partial<Field> = {
-            ...apiField,
-            validation,
-            options,
-        };
-
-        if (apiField.type === 'group' && apiField.fields) {
-            (transformedField as any).fields = apiField.fields.map(transformField);
-        }
-
-        return transformedField as Field;
-    };
-
-    const layout: LayoutDefinition = {
-        type: 'grid',
-        rows: apiSchema.fields.map((apiField, index) => ({
-            id: `row-${index}`,
-            columns: [
-                {
-                    span: 24,
-                    field: transformField(apiField),
-                },
-            ],
-        })),
-    };
-
-    const actions: ActionDefinition = {
-        alignment: 'right',
-        buttons: [
-            {
-                htmlType: 'reset',
-                children: 'Clear',
-            },
-            {
-                htmlType: 'submit',
-                type: 'primary',
-                children: 'Submit',
-                style: { marginLeft: '8px' },
-            },
-        ],
-    };
-
-    return {
-        formId: apiSchema.formId,
-        title: apiSchema.title,
-        layout,
-        actions,
-    };
-};
+import {toFormSchema} from "@/mappers";
 
 const ApplyPage = () => {
     const router = useRouter();
@@ -104,7 +35,7 @@ const ApplyPage = () => {
     const changeSelectedSchema = (value: string) => {
         const selectedSchema = formSchemas?.find(formSchema => formSchema.formId === value);
 
-        setSchema(transformApiToFormSchema(selectedSchema!));
+        setSchema(toFormSchema(selectedSchema!));
     }
 
     return (

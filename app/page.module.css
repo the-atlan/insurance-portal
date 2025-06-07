@@ -1,7 +1,6 @@
 .fullHeightContainer {
-  height: 100vh;
   width: 100%;
-  background-color: #f0f2f5;
+  flex: 1;
 }
 
 .card {
