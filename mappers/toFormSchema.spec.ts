@@ -11,9 +11,7 @@ describe('toFormSchema mapper function', () => {
         return key;
     });
 
-    // This runs before each test in the suite
     beforeEach(() => {
-        // ✅ This now works perfectly, because `mockT` is known to be a Jest mock.
         mockT.mockClear();
     });
 
