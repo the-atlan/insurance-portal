@@ -88,7 +88,7 @@ const toFormSchema = (apiSchema: ApiSchema, t: TFunction<"common", undefined>): 
     };
 
     const actions: ActionDefinition = {
-        alignment: 'right',
+        alignment: 'center',
         buttons: [
             {
                 htmlType: 'reset',

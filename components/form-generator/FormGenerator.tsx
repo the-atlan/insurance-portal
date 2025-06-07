@@ -32,7 +32,7 @@ const FormGenerator = ({ schema, onFinish, initialValues, form, onReset } : Form
                     ))}
                 </Row>
             ))}
-            <Flex gap="small" justify={schema.actions.alignment} >
+            <Flex gap="small" justify={schema.actions.alignment} className={styles.actions}>
                 {schema.actions.buttons.map((button, index) => (
                     <Button
                         key={`form-action-button-${index}`}

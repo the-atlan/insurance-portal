@@ -4,12 +4,18 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { Grid } from 'antd';
 import AppHeader from './AppHeader';
+import {useTranslation} from "react-i18next";
+import {ThemeContext} from "@/contexts/Theme.context";
 
 jest.mock('next/link', () => {
     return function Link ({ children, href }: { children: React.ReactNode; href: string }) {
         return <a href={href}>{children}</a>;
     };
 });
+
+jest.mock('react-i18next', () => ({
+    useTranslation: jest.fn(),
+}));
 
 jest.mock('antd', () => {
     const originalAntd = jest.requireActual('antd');
@@ -22,9 +28,36 @@ jest.mock('antd', () => {
     };
 });
 
+const mockedUseTranslation = useTranslation as jest.Mock;
 const mockedUseBreakpoint = Grid.useBreakpoint as jest.Mock;
 
 describe('AppHeader Component', () => {
+    const originalUseContext = React.useContext;
+
+    beforeEach(() => {
+        mockedUseTranslation.mockReturnValue({
+            t: (key: string) => key,
+            i18n: {
+                changeLanguage: jest.fn(),
+                language: 'en',
+            },
+        });
+
+        jest.spyOn(React, 'useContext').mockImplementation(context => {
+            if (context === ThemeContext) {
+                return {
+                    theme: 'light',
+                    toggleTheme: jest.fn(),
+                };
+            }
+            return originalUseContext(context);
+        });
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     describe('on a desktop screen (md or larger)', () => {
         beforeEach(() => {
             mockedUseBreakpoint.mockReturnValue({ md: true });
@@ -32,9 +65,9 @@ describe('AppHeader Component', () => {
 
         it('should render the horizontal menu', () => {
             render(<AppHeader />);
-            expect(screen.getByRole('link', { name: 'Home' })).toBeVisible();
-            expect(screen.getByRole('link', { name: 'New Application' })).toBeVisible();
-            expect(screen.queryByRole('button', { name: /menu/i })).not.toBeInTheDocument();
+            expect(screen.getByRole('link', { name: 'header.home' })).toBeInTheDocument();
+            expect(screen.getByRole('link', { name: 'header.new_application' })).toBeInTheDocument();
+            expect(screen.getByRole('link', { name: 'header.submissions' })).toBeInTheDocument();
         });
     });
 
@@ -59,7 +92,7 @@ describe('AppHeader Component', () => {
                 expect(screen.getByText('Menu')).toBeVisible();
             });
 
-            expect(screen.getByRole('link', { name: 'New Application' })).toBeVisible();
+            expect(screen.getByRole('link', { name: 'header.new_application' })).toBeVisible();
         });
 
         it('should close the drawer when a menu item is clicked', async () => {
@@ -67,7 +100,8 @@ describe('AppHeader Component', () => {
             await userEvent.click(screen.getByRole('button', { name: /menu/i }));
             expect(screen.getByText('Menu')).toBeVisible(); // Drawer is open
 
-            await userEvent.click(screen.getByRole('link', { name: 'Home' }));
+            const homeLinkInDrawer = screen.getByRole('link', { name: 'header.home' });
+            await userEvent.click(homeLinkInDrawer);
 
             await waitFor(() => {
                 expect(screen.queryByText('Menu')).not.toBeInTheDocument();

@@ -1,8 +1,22 @@
 import toFormSchema from './toFormSchema'; // Adjust the import path as needed
 import { ApiSchema } from '@/interfaces/api-schema.interface';
-import {Field, FormSchema} from '@/interfaces/field.interface';
+import {FormSchema} from '@/interfaces/field.interface';
+import {TFunction} from "i18next";
 
 describe('toFormSchema mapper function', () => {
+    const mockT = jest.fn((key: string, options?: { field: string }) => {
+        if (key === 'validation.required' && options?.field) {
+            return `${options.field} is required.`;
+        }
+        return key;
+    });
+
+    // This runs before each test in the suite
+    beforeEach(() => {
+        // ✅ This now works perfectly, because `mockT` is known to be a Jest mock.
+        mockT.mockClear();
+    });
+
     it('should correctly transform basic schema properties and create a default layout', () => {
         const mockApiSchema: ApiSchema = {
             formId: 'basic_test',
@@ -10,7 +24,7 @@ describe('toFormSchema mapper function', () => {
             fields: [{ id: 'name', label: 'Name', type: 'text' }]
         };
 
-        const result: FormSchema = toFormSchema(mockApiSchema);
+        const result: FormSchema = toFormSchema(mockApiSchema, mockT as unknown as TFunction);
 
         expect(result.formId).toBe('basic_test');
         expect(result.title).toBe('Basic Test Form');
@@ -19,7 +33,7 @@ describe('toFormSchema mapper function', () => {
         expect(result.layout.rows[0].columns[0].span).toBe(24);
         expect(result.layout.rows[0].columns[0].field.id).toBe('name');
         expect(result.actions).toBeDefined();
-        expect(result.actions.buttons[1].children).toBe('Submit');
+        expect(result.actions.buttons[1].children).toBe('apply.submit');
     });
 
     it('should transform the "required" property into a valid ANTD rule object', () => {
@@ -32,7 +46,7 @@ describe('toFormSchema mapper function', () => {
             ]
         };
 
-        const result = toFormSchema(mockApiSchema);
+        const result = toFormSchema(mockApiSchema, mockT as unknown as TFunction);
 
         const requiredField = result.layout.rows[0].columns[0].field;
         const optionalField = result.layout.rows[1].columns[0].field;
@@ -57,7 +71,7 @@ describe('toFormSchema mapper function', () => {
             }]
         };
 
-        const result = toFormSchema(mockApiSchema);
+        const result = toFormSchema(mockApiSchema, mockT as unknown as TFunction);
         const selectField = result.layout.rows[0].columns[0].field;
 
         if ("options" in selectField) {
@@ -83,7 +97,7 @@ describe('toFormSchema mapper function', () => {
             }]
         };
 
-        const result = toFormSchema(mockApiSchema);
+        const result = toFormSchema(mockApiSchema, mockT as unknown as TFunction);
         const groupField = result.layout.rows[0].columns[0].field;
 
         expect(groupField.type).toBe('group');
@@ -109,6 +123,6 @@ describe('toFormSchema mapper function', () => {
             }]
         } as any;
 
-        expect(() => toFormSchema(mockApiSchema)).toThrow('Unknown field type: this_type_does_not_exist');
+        expect(() => toFormSchema(mockApiSchema, mockT as unknown as TFunction)).toThrow('Unknown field type: this_type_does_not_exist');
     });
 });

@@ -2,7 +2,7 @@
 
 import styles from "./page.module.css"
 import React, {useState, useEffect, useMemo, useCallback} from 'react';
-import {Table, Card, Input, Button, Dropdown, Checkbox, Space, Typography, Flex, Grid} from 'antd';
+import {Table, Card, Input, Button, Dropdown, Checkbox, Space, Typography, Flex, Grid, Spin} from 'antd';
 import Link from 'next/link';
 import {useSubmissions} from "@/hooks/useForm";
 import {useTranslation} from "react-i18next";
@@ -73,7 +73,11 @@ const SubmissionsPage = () => {
     }, [allColumns, visibleColumns]);
 
     if (isSubmissionsLoading) {
-        return <div>Loading...</div>
+        return (
+            <Flex align={"center"} justify={"center"}>
+                <Spin />
+            </Flex>
+        )
     }
 
     const columnSelectorMenu = (

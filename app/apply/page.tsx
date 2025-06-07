@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useEffect, useState} from 'react';
-import {Form, message, Select} from 'antd';
+import {Flex, Form, message, Select, Typography, Spin} from 'antd';
 import styles from './page.module.css';
 import FormGenerator from "@/components/form-generator/FormGenerator";
 import {FormSchema} from "@/interfaces/field.interface";
@@ -9,6 +9,8 @@ import {useFormSchemas, useSubmitApplication} from "@/hooks/useForm";
 import {useRouter} from "next/navigation";
 import {toFormSchema} from "@/mappers";
 import {useTranslation} from "react-i18next";
+
+const { Title } = Typography
 
 const ApplyPage = () => {
     const router = useRouter();
@@ -44,6 +46,7 @@ const ApplyPage = () => {
         if (!selectedForm) return;
 
         const debounceSave = setTimeout(() => {
+            console.log("logggggggggg")
             if (formValues && Object.keys(formValues).length > 0) {
                 localStorage.setItem(`formDraft_${selectedForm}`, JSON.stringify(formValues));
             }
@@ -92,7 +95,15 @@ const ApplyPage = () => {
     return (
         <div dir={t('dir')} className={styles.container}>
             {contextHolder}
-            {isLoading ? <p>Loading...</p> : <Select style={{ width: '50%' }} options={getAvailableSchemas()} onChange={changeSelectedSchema} />}
+            {isLoading ?
+                <Flex align={"center"} justify={"center"}>
+                    <Spin />
+                </Flex>:
+                <Flex vertical align={"center"} className={styles.forms}>
+                    <Title level={2}>{t('apply.choose_application')}</Title>
+                    <Select style={{ width: '50%' }} options={getAvailableSchemas()} onChange={changeSelectedSchema} />
+                </Flex>
+            }
             {schema && selectedForm && <FormGenerator schema={schema} onFinish={onFinish} form={form} initialValues={initialValues} onReset={onReset}/>}
         </div>
     );
